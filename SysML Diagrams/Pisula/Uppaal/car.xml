@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+chan obj_det,obj_n,line_is_detected,obj_n_detected,line_detected;</declaration>
+	<template>
+		<name>linedet</name>
+		<location id="id0" x="-578" y="-306">
+			<name x="-588" y="-340">off_the_line</name>
+		</location>
+		<location id="id1" x="-229" y="-306">
+			<name x="-239" y="-340">on_the_line</name>
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-381" y="-382">line_detected!</label>
+			<nail x="-399" y="-425"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-459" y="-306">line_is_detected!</label>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">ultrasonic</name>
+		<declaration>// Place local declarations here.</declaration>
+		<location id="id2" x="-170" y="-17">
+		</location>
+		<location id="id3" x="119" y="-8">
+			<name x="119" y="-51">obj_detected</name>
+		</location>
+		<init ref="id2"/>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-76" y="102">line_is_detected!</label>
+			<nail x="-25" y="102"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-34" y="-34">obj_det!</label>
+			<nail x="-161" y="-8"/>
+			<nail x="-42" y="-8"/>
+		</transition>
+	</template>
+	<template>
+		<name>car</name>
+		<location id="id4" x="-221" y="-25">
+			<name x="-231" y="-59">start</name>
+		</location>
+		<location id="id5" x="-85" y="-25">
+			<name x="-95" y="-59">mv_fwd</name>
+		</location>
+		<location id="id6" x="119" y="-25">
+			<name x="110" y="-59">turn</name>
+		</location>
+		<init ref="id5"/>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="238" y="0">line_is_detected?</label>
+			<label kind="comments" x="137" y="-26">If line is not detected keep turning till the line is detected again</label>
+			<nail x="221" y="-77"/>
+			<nail x="221" y="25"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="42" y="-144">line_detected?</label>
+			<nail x="17" y="-144"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="0" y="-51">obj_det?</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id5"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+car_1=car();
+ultra=ultrasonic();
+linedetection=linedet();
+// List one or more processes to be composed into a system.
+system car_1,ultra,linedetection;
+    </system>
+	<queries>
+		<query>
+			<formula></formula>
+			<comment></comment>
+		</query>
+	</queries>
+</nta>
