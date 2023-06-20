@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+chan Move, Obstacle_detected, Obstacle_not_detected, Line_detected, Line_not_detected;</declaration>
+	<template>
+		<name>Obstacle</name>
+		<declaration>clock wait;</declaration>
+		<location id="id0" x="68" y="-8">
+			<name x="119" y="-17">Obstacledetection</name>
+		</location>
+		<location id="id1" x="-178" y="0">
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-110" y="170">Obstacle_not_detected!</label>
+			<nail x="-8" y="170"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="17" y="-136">Obstacle_detected!</label>
+			<nail x="144" y="-110"/>
+			<nail x="-8" y="-110"/>
+		</transition>
+	</template>
+	<template>
+		<name>Line_detection</name>
+		<declaration>clock wait;</declaration>
+		<location id="id2" x="-85" y="-110">
+			<name x="-95" y="-144">Linedetection</name>
+		</location>
+		<location id="id3" x="-238" y="0">
+			<name x="-248" y="-34">Start</name>
+		</location>
+		<init ref="id2"/>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-204" y="34">Line_detected!</label>
+			<nail x="-59" y="42"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-153" y="-246">Line_not_detected!</label>
+			<nail x="-17" y="-212"/>
+			<nail x="-162" y="-212"/>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">Car</name>
+		<declaration>// Place local declarations here.
+clock wait;</declaration>
+		<location id="id4" x="-178" y="-68">
+			<name x="-212" y="-51">linedetection</name>
+		</location>
+		<location id="id5" x="-34" y="-68">
+			<name x="-34" y="-59">carobstacle</name>
+		</location>
+		<init ref="id4"/>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-160" y="-5">Obstacle_not_detected?</label>
+			<nail x="-110" y="93"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="-85" y="-195">Obstacle_detected?</label>
+			<nail x="34" y="-170"/>
+			<nail x="-85" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-246" y="-204">Line_not_detected?</label>
+			<nail x="-110" y="-170"/>
+			<nail x="-246" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="-161" y="-93">Line_detected?</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+carOne=Car();
+Line=Line_detection();
+obstacleOne=Obstacle();
+// List one or more processes to be composed into a system.
+system carOne, Line, obstacleOne;
+    </system>
+	<queries>
+		<query>
+			<formula>A[]!deadlock</formula>
+			<comment></comment>
+		</query>
+	</queries>
+</nta>
